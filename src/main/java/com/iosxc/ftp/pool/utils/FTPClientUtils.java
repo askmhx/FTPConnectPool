@@ -20,12 +20,13 @@ public class FTPClientUtils {
 
     private static Logger log = LoggerFactory.getLogger(FTPClientUtils.class);
 
-    private static GenericObjectPool<FTPClient> ftpClientPool = FTPClientPoolManager.getPool();
+    private static GenericObjectPool<FTPClient> ftpClientPool;
 
     private static boolean isInit = false;
 
     public static void initConfig(FTPPoolConfig config){
         FTPClientPoolManager.initConfig(config);
+        ftpClientPool = FTPClientPoolManager.getPool();
         isInit = true;
     }
 
