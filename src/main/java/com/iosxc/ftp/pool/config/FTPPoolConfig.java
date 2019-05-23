@@ -41,12 +41,12 @@ public class FTPPoolConfig {
     /**
      * 连接超时时间(秒)
      */
-    private Integer connectTimeout=50;
+    private Integer connectTimeout=2*60;
 
     /**
      * 传输超时时间(秒)
      */
-    private Integer dataTimeout=2*60;
+    private Integer dataTimeout=5*60;
 
     /**
      * 缓冲大小
