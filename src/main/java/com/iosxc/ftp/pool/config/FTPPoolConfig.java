@@ -31,7 +31,7 @@ public class FTPPoolConfig {
     /**
      * 被动模式
      */
-    private boolean passiveMode = false;
+    private boolean passiveMode = true;
 
     /**
      * 编码
@@ -51,7 +51,7 @@ public class FTPPoolConfig {
     /**
      * 缓冲大小
      */
-    private Integer bufferSize = 1024;
+    private Integer bufferSize = 2028;
 
     /**
      * 设置keepAlive
