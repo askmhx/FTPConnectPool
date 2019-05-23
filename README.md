@@ -1,7 +1,7 @@
 # FTP Connection Pool Utils
 [![](https://jitpack.io/v/menghx/FTPConnectPool.svg)](https://jitpack.io/#menghx/FTPConnectPool)
 
-Fork from https://github.com/jayknoxqu/ftp-pool
+
 
 建议使用FtpClientUtils来初始化和操作FTP
 
@@ -28,3 +28,7 @@ FTPClientUtils.downloadFile(String remotePath, String fileName, String localPath
 ```
 FTPClientUtils.deleteFile(String remotePath, String fileName)
 ```
+
+-----
+
+## 部分代码是参考或Copy自 [ftp-pool](https://github.com/jayknoxqu/ftp-pool) 感谢 [jayknoxqu](https://github.com/jayknoxqu/)
