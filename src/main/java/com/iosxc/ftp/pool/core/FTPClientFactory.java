@@ -1,6 +1,6 @@
 package com.iosxc.ftp.pool.core;
 
-import com.iosxc.ftp.pool.config.FtpClientProperties;
+import com.iosxc.ftp.pool.config.FTPPoolConfig;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.pool2.BasePooledObjectFactory;
@@ -14,14 +14,14 @@ import java.io.IOException;
 /**
  * @author AskMHX
  */
-public class FtpClientFactory extends BasePooledObjectFactory<FTPClient> {
+public class FTPClientFactory extends BasePooledObjectFactory<FTPClient> {
 
-    private static Logger log = LoggerFactory.getLogger(FtpClientFactory.class);
+    private static Logger log = LoggerFactory.getLogger(FTPClientFactory.class);
 
 
-    private FtpClientProperties config;
+    private FTPPoolConfig config;
 
-    public FtpClientFactory(FtpClientProperties config) {
+    public FTPClientFactory(FTPPoolConfig config) {
         this.config = config;
     }
 
@@ -35,7 +35,6 @@ public class FtpClientFactory extends BasePooledObjectFactory<FTPClient> {
         ftpClient.setDataTimeout(config.getDataTimeout());
         ftpClient.setConnectTimeout(config.getConnectTimeout());
         ftpClient.setControlKeepAliveTimeout(config.getKeepAliveTimeout());
-
         try {
 
             ftpClient.connect(config.getHost(), config.getPort());

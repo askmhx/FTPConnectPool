@@ -6,7 +6,7 @@ import org.apache.commons.net.ftp.FTP;
  *
  * @author AskMHX
  */
-public class FtpClientProperties {
+public class FTPPoolConfig {
 
     /**
      * ftp地址
@@ -59,6 +59,34 @@ public class FtpClientProperties {
      * Zero (or less) disables
      */
     private Integer keepAliveTimeout = 0;
+
+    private Integer maxTotal = 30;
+    private Integer maxIdle = 30;
+    private Integer minIdle = 5;
+
+    public Integer getMaxTotal() {
+        return maxTotal;
+    }
+
+    public void setMaxTotal(Integer maxTotal) {
+        this.maxTotal = maxTotal;
+    }
+
+    public Integer getMaxIdle() {
+        return maxIdle;
+    }
+
+    public void setMaxIdle(Integer maxIdle) {
+        this.maxIdle = maxIdle;
+    }
+
+    public Integer getMinIdle() {
+        return minIdle;
+    }
+
+    public void setMinIdle(Integer minIdle) {
+        this.minIdle = minIdle;
+    }
 
     /**
      * 传输文件类型

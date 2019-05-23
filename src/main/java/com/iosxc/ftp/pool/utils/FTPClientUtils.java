@@ -1,8 +1,7 @@
 package com.iosxc.ftp.pool.utils;
 
-import com.iosxc.ftp.pool.config.FtpClientProperties;
-import com.iosxc.ftp.pool.core.FtpClientFactory;
-import com.iosxc.ftp.pool.core.FtpClientPoolManager;
+import com.iosxc.ftp.pool.config.FTPPoolConfig;
+import com.iosxc.ftp.pool.core.FTPClientPoolManager;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -17,16 +16,16 @@ import java.io.*;
  *
  * @author Crazz
  */
-public class FtpClientUtils {
+public class FTPClientUtils {
 
-    private static Logger log = LoggerFactory.getLogger(FtpClientUtils.class);
+    private static Logger log = LoggerFactory.getLogger(FTPClientUtils.class);
 
-    private static GenericObjectPool<FTPClient> ftpClientPool = FtpClientPoolManager.getPool();
+    private static GenericObjectPool<FTPClient> ftpClientPool = FTPClientPoolManager.getPool();
 
     private static boolean isInit = false;
 
-    public static void initFactory(FtpClientProperties properties){
-        FtpClientPoolManager.initFactory(new FtpClientFactory(properties));
+    public static void initConfig(FTPPoolConfig config){
+        FTPClientPoolManager.initConfig(config);
         isInit = true;
     }
 
@@ -39,7 +38,7 @@ public class FtpClientUtils {
      */
     public static boolean uploadFile(File localFile, String remotePath) {
         if (!isInit) {
-            log.error("Please init ftp factory first! @see FtpClientUtils.initFactory(FtpClientProperties properties)");
+            log.error("Please init ftp factory first! @see FTPClientUtils.initFactory(FTPPoolConfig properties)");
             return false;
         }
         FTPClient ftpClient = null;
@@ -90,7 +89,7 @@ public class FtpClientUtils {
      */
     public  static boolean downloadFile(String remotePath, String fileName, String localPath) {
         if (!isInit) {
-            log.error("Please init ftp factory first! @see FtpClientUtils.initFactory(FtpClientProperties properties)");
+            log.error("Please init ftp factory first! @see FTPClientUtils.initFactory(FTPPoolConfig properties)");
             return false;
         }
         FTPClient ftpClient = null;
@@ -136,7 +135,7 @@ public class FtpClientUtils {
      */
     public static boolean deleteFile(String remotePath, String fileName) {
         if (!isInit) {
-            log.error("Please init ftp factory first! @see FtpClientUtils.initFactory(FtpClientProperties properties)");
+            log.error("Please init ftp factory first! @see FTPClientUtils.initFactory(FTPPoolConfig properties)");
             return false;
         }
         FTPClient ftpClient = null;

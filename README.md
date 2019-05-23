@@ -7,18 +7,18 @@ Fork from https://github.com/jayknoxqu/ftp-pool
 
 ### 项目启动时执行
 ```
-FtpClientUtils.initFactory(FtpClientProperties properties);
+FTPClientUtils.initConfig(FTPPoolConfig config);
 ```
 ### 调用相关方法
 #####上传文件
 ```
-FtpClientUtils.uploadFile(File localFile, String remotePath) 
+FTPClientUtils.uploadFile(File localFile, String remotePath) 
 ```
 #####下载文件
 ```
-FtpClientUtils.downloadFile(String remotePath, String fileName, String localPath)
+FTPClientUtils.downloadFile(String remotePath, String fileName, String localPath)
 ```
 #####删除文件
 ```
-FtpClientUtils.deleteFile(String remotePath, String fileName)
+FTPClientUtils.deleteFile(String remotePath, String fileName)
 ```
