@@ -155,14 +155,11 @@ public class FTPClientUtils {
                 log.warn("ftpServer refused connection, replyCode:{}", replyCode);
                 return false;
             }
-            // 切换FTP目录
             ftpClient.changeWorkingDirectory(remotePath);
             FTPFile[] ftpFiles = ftpClient.listFiles();
             for (FTPFile file : ftpFiles) {
                 if (fileName.equalsIgnoreCase(file.getName())) {
-                    StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.append(localPath).append(File.separator).append(file.getName());
-                    File localFile = new File(stringBuilder.toString());
+                    File localFile = new File(localPath);
                     outputStream = new FileOutputStream(localFile);
                     ftpClient.retrieveFile(file.getName(), outputStream);
                 }
