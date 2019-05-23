@@ -91,7 +91,7 @@ public class FTPPoolConfig {
     /**
      * 传输文件类型
      */
-    private Integer transferFileType = FTP.ASCII_FILE_TYPE;
+    private Integer transferFileType = FTP.BINARY_FILE_TYPE;
 
     public String getHost() {
         return host;
