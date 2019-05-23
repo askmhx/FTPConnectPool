@@ -50,9 +50,11 @@ public class FTPClientUtils {
                 log.warn("ftpServer refused connection, replyCode:{}", replyCode);
                 return false;
             }
-            ftpClient.changeWorkingDirectory("/");
-            if (!ftpClient.changeWorkingDirectory(remotePath)){
+            if(!remotePath.startsWith("/")){
                 ftpClient.changeWorkingDirectory("/");
+            }
+            boolean ret =  ftpClient.changeWorkingDirectory(remotePath);
+            if (!ret){
                 if(remotePath.contains("/")){
                     String[] paths = remotePath.split("/");
                     for(String tph : paths){
@@ -64,6 +66,8 @@ public class FTPClientUtils {
                             log.error("3010创建目录 {} 失败: {}" , tph,e.toString() );
                         }
                     }
+                }else{
+                    ftpClient.changeWorkingDirectory(remotePath);
                 }
             }
             log.info("start upload to:{} store name:{}",remotePath, fileName);
