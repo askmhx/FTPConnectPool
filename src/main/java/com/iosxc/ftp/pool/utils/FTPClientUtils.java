@@ -31,6 +31,59 @@ public class FTPClientUtils {
 
     /***
      * 上传Ftp文件
+     * @param remotePath 上传服务器路径 - 应该以/结束
+     * @param fileName 保存的文件名
+     * @param inStream 上传的文件流
+     * @return true or false
+     */
+    public static boolean uploadFile( String remotePath ,String fileName,InputStream inStream) {
+        if (!isInit) {
+            log.error("Please init ftp factory first! @see FTPClientUtils.initFactory(FTPPoolConfig properties)");
+            return false;
+        }
+        FTPClient ftpClient = null;
+        try {
+            ftpClient = ftpClientPool.borrowObject();
+            int replyCode = ftpClient.getReplyCode();
+            if (!FTPReply.isPositiveCompletion(replyCode)) {
+                log.warn("ftpServer refused connection, replyCode:{}", replyCode);
+                return false;
+            }
+            ftpClient.changeWorkingDirectory("/");
+            if (!ftpClient.changeWorkingDirectory(remotePath)){
+                ftpClient.changeWorkingDirectory("/");
+                if(remotePath.contains("/")){
+                    String[] paths = remotePath.split("/");
+                    for(String tph : paths){
+                        try {
+                            ftpClient.makeDirectory(tph);
+                            ftpClient.changeWorkingDirectory(tph);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            log.error("3010创建目录 {} 失败: {}" , tph,e.toString() );
+                        }
+                    }
+                }
+            }
+            log.info("start upload to:{} store name:{}",remotePath, fileName);
+            boolean success = ftpClient.storeFile(fileName, inStream);
+            if (success) {
+                log.info("upload file success! {}", fileName);
+                return true;
+            }
+            log.warn("upload file failure!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("upload file failure!", e);
+        } finally {
+            IOUtils.closeQuietly(inStream);
+            ftpClientPool.returnObject(ftpClient);
+        }
+        return false;
+    }
+
+    /***
+     * 上传Ftp文件
      *
      * @param localFile 当地文件
      * @param remotePath 上传服务器路径 - 应该以/结束
@@ -41,40 +94,14 @@ public class FTPClientUtils {
             log.error("Please init ftp factory first! @see FTPClientUtils.initFactory(FTPPoolConfig properties)");
             return false;
         }
-        FTPClient ftpClient = null;
-        BufferedInputStream inStream = null;
         try {
-            //从池中获取对象
-            ftpClient = ftpClientPool.borrowObject();
-            // 验证FTP服务器是否登录成功
-            int replyCode = ftpClient.getReplyCode();
-            if (!FTPReply.isPositiveCompletion(replyCode)) {
-                log.warn("ftpServer refused connection, replyCode:{}", replyCode);
-                return false;
-            }
-            // 改变工作路径
-            ftpClient.changeWorkingDirectory(remotePath);
-            inStream = new BufferedInputStream(new FileInputStream(localFile));
-            log.info("start upload... {}", localFile.getName());
-
-            final int retryTimes = 3;
-
-            for (int j = 0; j <= retryTimes; j++) {
-                boolean success = ftpClient.storeFile(localFile.getName(), inStream);
-                if (success) {
-                    log.info("upload file success! {}", localFile.getName());
-                    return true;
-                }
-                log.warn("upload file failure! try uploading again... {} times", j);
-            }
-
+            return uploadFile(remotePath,localFile.getName(),new BufferedInputStream(new FileInputStream(localFile)));
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
             log.error("file not found!{}", localFile);
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("upload file failure!", e);
-        } finally {
-            IOUtils.closeQuietly(inStream);
-            ftpClientPool.returnObject(ftpClient);
         }
         return false;
     }
