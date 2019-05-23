@@ -84,6 +84,31 @@ public class FTPClientUtils {
     }
 
     /***
+     * 手工取得FTP Client
+     * **/
+    public static FTPClient borrowClient( ) {
+        if (!isInit) {
+            log.error("Please init ftp factory first! @see FTPClientUtils.initFactory(FTPPoolConfig properties)");
+            return null;
+        }
+        try {
+            return ftpClientPool.borrowObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    /***
+        * 归还FTP Client
+     * **/
+    public static void returnClient(FTPClient ftpClient ) {
+        if (!isInit) {
+            log.error("Please init ftp factory first! @see FTPClientUtils.initFactory(FTPPoolConfig properties)");
+        }
+        ftpClientPool.returnObject(ftpClient);
+    }
+
+    /***
      * 上传Ftp文件
      *
      * @param localFile 当地文件
@@ -130,7 +155,6 @@ public class FTPClientUtils {
                 log.warn("ftpServer refused connection, replyCode:{}", replyCode);
                 return false;
             }
-
             // 切换FTP目录
             ftpClient.changeWorkingDirectory(remotePath);
             FTPFile[] ftpFiles = ftpClient.listFiles();
@@ -143,9 +167,9 @@ public class FTPClientUtils {
                     ftpClient.retrieveFile(file.getName(), outputStream);
                 }
             }
-            ftpClient.logout();
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("download file failure!", e);
         } finally {
             IOUtils.closeQuietly(outputStream);
@@ -181,6 +205,7 @@ public class FTPClientUtils {
             log.debug("delete file reply code:{}", delCode);
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("delete file failure!", e);
         } finally {
             ftpClientPool.returnObject(ftpClient);

@@ -36,7 +36,6 @@ public class FTPClientFactory extends BasePooledObjectFactory<FTPClient> {
         ftpClient.setConnectTimeout(config.getConnectTimeout());
         ftpClient.setControlKeepAliveTimeout(config.getKeepAliveTimeout());
         try {
-
             ftpClient.connect(config.getHost(), config.getPort());
             int replyCode = ftpClient.getReplyCode();
             if (!FTPReply.isPositiveCompletion(replyCode)) {
@@ -56,6 +55,7 @@ public class FTPClientFactory extends BasePooledObjectFactory<FTPClient> {
             }
 
         } catch (IOException e) {
+            e.printStackTrace();
             log.error("create ftp connection failed...", e);
         }
         return ftpClient;
